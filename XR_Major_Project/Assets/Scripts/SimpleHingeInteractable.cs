@@ -14,8 +14,6 @@ public abstract class SimpleHingeInteractable : XRSimpleInteractable
     private Collider hingeCollider;
     private Vector3 hingePositions;
     [SerializeField] bool isLocked;
-    [SerializeField] AudioClip hingeMoveClip;
-    public AudioClip GetHingeMoveClip => hingeMoveClip;
     private const string Default_Layer = "Default";
     private const string Grab_Layer = "Grab";
 

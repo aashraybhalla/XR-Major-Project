@@ -1736,7 +1736,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 1
+    m_Bits: 2
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_FocusMode: 1
@@ -6654,8 +6654,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -6856,7 +6856,6 @@ MonoBehaviour:
       m_Calls: []
   positionLimits: {x: 0.2, y: 0.2, z: 0.2}
   isLocked: 0
-  hingeMoveClip: {fileID: 0}
   robot: {fileID: 6319086292877189116}
   rotationParentObject: {fileID: 0}
   trackedObject: {fileID: 1505725000}
@@ -9631,7 +9630,7 @@ GameObject:
   - component: {fileID: 1505725002}
   - component: {fileID: 1505725001}
   m_Layer: 0
-  m_Name: trackeObject
+  m_Name: trackedObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13444,7 +13443,7 @@ Transform:
   m_GameObject: {fileID: 2096742410}
   serializedVersion: 2
   m_LocalRotation: {x: -0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.09627485, z: 0}
+  m_LocalPosition: {x: 0, y: -0.083, z: 0}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
