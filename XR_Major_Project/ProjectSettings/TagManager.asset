@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - TdLevelManager
+  - PW - Prop
+  - PW - Nature
+  - HeartPosition
   layers:
   - Default
   - TransparentFX
