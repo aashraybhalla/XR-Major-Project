@@ -55,6 +55,7 @@ public class Scissors : MonoBehaviour
 
                 patientBody.SetActive(false);
                 scalpel.enabled = true;
+                this.enabled = false;
             }
         }
         

@@ -51,6 +51,7 @@ public class Drill : MonoBehaviour
                 heart.SetActive(true);
                 devicePos.SetActive(true);
                 devicePlacement.enabled = true;
+                this.enabled = false;
             }
         }
 

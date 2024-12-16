@@ -38,6 +38,7 @@ public class Anaesthesia : MonoBehaviour
                     Destroy(go);
                 }
                 scissors.enabled = true;
+                this.enabled = false;
             }
         }
 

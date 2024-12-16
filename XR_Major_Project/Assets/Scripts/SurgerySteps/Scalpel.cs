@@ -22,20 +22,6 @@ public class Scalpel : MonoBehaviour
             outlines.Add(child.gameObject);
         }
     }
-    private void OnEnable()
-    {
-        //currentCount = 0;
-        //foreach (Transform child in parentObject.transform)
-        //{
-        //    outlines.Add(child.gameObject);
-        //}
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -54,6 +40,7 @@ public class Scalpel : MonoBehaviour
 
                 patientSkinBody.SetActive(false);
                 drill.enabled = true;
+                this.enabled = false;
             }
         }
 

@@ -30,6 +30,7 @@ public class HeartClosureDevicePlacement : MonoBehaviour
             interactable.enabled = false;
             self.transform.position = other.transform.position;
             Invoke("DelayActions", 3f);
+            this.enabled = false;
         }
     }
 
