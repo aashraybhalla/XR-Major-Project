@@ -12953,9 +12953,13 @@ MonoBehaviour:
   wheelchairBody: {fileID: 731586423}
   leftHandle: {fileID: 1903037595}
   rightHandle: {fileID: 1583382015}
+  xrOrigin: {fileID: 1514927246}
   moveSpeed: 2
-  turnSpeed: 100
   smoothing: 5
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckDistance: 0.1
 --- !u!1001 &751048352
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27184,6 +27188,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1082bed56e6e84041a2b33032e55f32e, type: 3}
+--- !u!4 &1514927246 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3702740354270120786, guid: 1082bed56e6e84041a2b33032e55f32e, type: 3}
+  m_PrefabInstance: {fileID: 1514927245}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1526407699
 PrefabInstance:
   m_ObjectHideFlags: 0

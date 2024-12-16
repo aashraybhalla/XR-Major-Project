@@ -7,18 +7,21 @@ public class WheelChair : MonoBehaviour
     [SerializeField] private Transform wheelchairBody;
     [SerializeField] private XRGrabInteractable leftHandle;
     [SerializeField] private XRGrabInteractable rightHandle;
+    [SerializeField] private Transform xrOrigin; // Reference to XR Origin
     
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float turnSpeed = 100f;
     [SerializeField] private float smoothing = 5f;
+    [SerializeField] private LayerMask groundLayer; // Layer mask for ground detection
+    [SerializeField] private float groundCheckDistance = 0.1f; // Distance to check for ground
     
     private bool isLeftHandleGrabbed;
     private bool isRightHandleGrabbed;
-    private Vector3 leftHandlePrevPos;
-    private Vector3 rightHandlePrevPos;
+    private Vector3 previousXRPosition;
     private float currentSpeed;
     private float targetSpeed;
+    private Vector3 moveDirection;
+    private Rigidbody wheelchairRigidbody;
 
     private void Start()
     {
@@ -27,68 +30,72 @@ public class WheelChair : MonoBehaviour
         leftHandle.selectExited.AddListener(OnLeftHandleReleased);
         rightHandle.selectEntered.AddListener(OnRightHandleGrabbed);
         rightHandle.selectExited.AddListener(OnRightHandleReleased);
+
+        // Get or add Rigidbody
+        wheelchairRigidbody = GetComponent<Rigidbody>();
+        if (wheelchairRigidbody == null)
+        {
+            wheelchairRigidbody = gameObject.AddComponent<Rigidbody>();
+        }
+
+        // Configure Rigidbody
+        wheelchairRigidbody.useGravity = true;
+        wheelchairRigidbody.constraints = RigidbodyConstraints.FreezeRotation; // Prevent tipping
+        previousXRPosition = xrOrigin.position;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!isLeftHandleGrabbed && !isRightHandleGrabbed)
         {
             // Gradually slow down when not being pushed
             targetSpeed = 0f;
-            currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * smoothing);
-            wheelchairBody.Translate(Vector3.forward * currentSpeed * Time.deltaTime, Space.Self);
+            currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.fixedDeltaTime * smoothing);
             return;
         }
 
-        // Calculate movement based on handle positions
-        Vector3 leftHandleDelta = Vector3.zero;
-        Vector3 rightHandleDelta = Vector3.zero;
+        // Calculate XR Origin movement direction
+        Vector3 xrMovement = xrOrigin.position - previousXRPosition;
+        xrMovement.y = 0; // Remove vertical movement
 
-        if (isLeftHandleGrabbed)
+        if (xrMovement.magnitude > 0.001f) // Check if there's significant movement
         {
-            leftHandleDelta = leftHandle.transform.position - leftHandlePrevPos;
-            leftHandlePrevPos = leftHandle.transform.position;
+            moveDirection = xrMovement.normalized;
         }
 
-        if (isRightHandleGrabbed)
+        // Calculate speed based on XR movement magnitude
+        targetSpeed = xrMovement.magnitude * moveSpeed;
+        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.fixedDeltaTime * smoothing);
+
+        // Apply movement using physics
+        Vector3 targetVelocity = moveDirection * currentSpeed;
+        targetVelocity.y = wheelchairRigidbody.velocity.y; // Preserve gravity
+        wheelchairRigidbody.velocity = targetVelocity;
+
+        // Ground check and snapping
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hit, groundCheckDistance + 1f, groundLayer))
         {
-            rightHandleDelta = rightHandle.transform.position - rightHandlePrevPos;
-            rightHandlePrevPos = rightHandle.transform.position;
+            Vector3 targetPosition = hit.point;
+            targetPosition.y += groundCheckDistance; // Keep slight distance from ground
+            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.fixedDeltaTime * 10f);
         }
 
-        // Calculate forward movement
-        float forwardMovement = 0f;
-        if (isLeftHandleGrabbed && isRightHandleGrabbed)
-        {
-            // Average movement when both handles are grabbed
-            forwardMovement = (leftHandleDelta.z + rightHandleDelta.z) / 2f;
-        }
-        else
-        {
-            // Single handle movement
-            forwardMovement = isLeftHandleGrabbed ? leftHandleDelta.z : rightHandleDelta.z;
-        }
+        // Update previous position
+        previousXRPosition = xrOrigin.position;
 
-        // Calculate turning
-        float turnAmount = 0f;
-        if (isLeftHandleGrabbed && isRightHandleGrabbed)
+        // Update wheelchair rotation to face movement direction
+        if (targetVelocity.magnitude > 0.01f)
         {
-            // Turn based on handle difference
-            turnAmount = (rightHandleDelta.z - leftHandleDelta.z) * turnSpeed;
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * smoothing);
         }
-
-        // Apply movement
-        targetSpeed = forwardMovement * moveSpeed;
-        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * smoothing);
-        
-        wheelchairBody.Translate(Vector3.forward * currentSpeed * Time.deltaTime, Space.Self);
-        wheelchairBody.Rotate(Vector3.up * turnAmount * Time.deltaTime);
     }
 
     private void OnLeftHandleGrabbed(SelectEnterEventArgs args)
     {
         isLeftHandleGrabbed = true;
-        leftHandlePrevPos = leftHandle.transform.position;
+        previousXRPosition = xrOrigin.position;
     }
 
     private void OnLeftHandleReleased(SelectExitEventArgs args)
@@ -99,7 +106,7 @@ public class WheelChair : MonoBehaviour
     private void OnRightHandleGrabbed(SelectEnterEventArgs args)
     {
         isRightHandleGrabbed = true;
-        rightHandlePrevPos = rightHandle.transform.position;
+        previousXRPosition = xrOrigin.position;
     }
 
     private void OnRightHandleReleased(SelectExitEventArgs args)
