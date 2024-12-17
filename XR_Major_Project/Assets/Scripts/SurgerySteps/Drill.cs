@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class Drill : MonoBehaviour
 {
@@ -13,6 +14,11 @@ public class Drill : MonoBehaviour
     public GameObject heart;
     public GameObject devicePos;
     public HeartClosureDevicePlacement devicePlacement;
+
+    [Header("Video")]
+    public VideoPlayer videoPlayer;
+    public VideoClip clip;
+    private bool hasVideoPlayed = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,11 +31,12 @@ public class Drill : MonoBehaviour
     }
     private void OnEnable()
     {
-        //currentCount = 0;
-        //foreach (Transform child in parentObject.transform)
-        //{
-        //    outlines.Add(child.gameObject);
-        //}
+        if (!hasVideoPlayed)
+        {
+            videoPlayer.clip = clip;
+            videoPlayer.Play();
+            hasVideoPlayed = true;
+        }
     }
 
 
@@ -51,6 +58,7 @@ public class Drill : MonoBehaviour
                 heart.SetActive(true);
                 devicePos.SetActive(true);
                 devicePlacement.enabled = true;
+                this.enabled = false;
             }
         }
 

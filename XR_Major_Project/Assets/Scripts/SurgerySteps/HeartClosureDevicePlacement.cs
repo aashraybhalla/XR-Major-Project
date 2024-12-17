@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class HeartClosureDevicePlacement : MonoBehaviour
@@ -10,6 +11,14 @@ public class HeartClosureDevicePlacement : MonoBehaviour
     private Transform self;
     private XRGrabInteractable interactable;
     public GameObject skinBody;
+
+    [Header("Video")]
+    public VideoPlayer videoPlayer;
+    public VideoClip clip;
+    private bool hasVideoPlayed = false;
+
+    [Header("Audio")]
+    public AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,19 +26,27 @@ public class HeartClosureDevicePlacement : MonoBehaviour
         interactable = GetComponent<XRGrabInteractable>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        if (!hasVideoPlayed)
+        {
+            videoPlayer.clip = clip;
+            videoPlayer.Play();
+            hasVideoPlayed = true;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+
         if (other.gameObject.CompareTag("HeartPosition"))
         {
             interactable.enabled = false;
             self.transform.position = other.transform.position;
+            self.transform.rotation = other.transform.rotation;
+            audioSource.Play();
             Invoke("DelayActions", 3f);
+            this.enabled = false;
         }
     }
 

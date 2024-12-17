@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class Anaesthesia : MonoBehaviour
 {
@@ -9,6 +10,11 @@ public class Anaesthesia : MonoBehaviour
     private int currentCount;
     public GameObject parentObject;
     public Scissors scissors;
+
+    [Header("Video")]
+    public VideoPlayer videoPlayer;
+    public VideoClip clip;
+    private bool hasVideoPlayed = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,14 +25,19 @@ public class Anaesthesia : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-
+        if (!hasVideoPlayed)
+        {
+            videoPlayer.clip = clip;
+            videoPlayer.Play();
+            hasVideoPlayed = true;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        
         if (other.gameObject == outlines[currentCount])
         {
             currentCount++;
@@ -38,6 +49,7 @@ public class Anaesthesia : MonoBehaviour
                     Destroy(go);
                 }
                 scissors.enabled = true;
+                this.enabled = false;
             }
         }
 
