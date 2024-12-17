@@ -5,13 +5,13 @@ public class DeliveryAgent : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Transform holdPoint;
-    [SerializeField] private Transform playerTransform;
-    [SerializeField] private GameObject objectToPickup; // Reference to the specific object to pick up
+    [SerializeField] private Transform dropPoint; // Reference to where item should be dropped
+    [SerializeField] private GameObject objectToPickup;
     [SerializeField] private float pickupRange = 1.5f;
-    [SerializeField] private float deliveryRange = 2f;
+    [SerializeField] private float dropRange = 1.5f;
 
     private bool isHoldingItem;
-    private bool isReturningToPlayer;
+    private bool isDeliveringItem;
     private Vector3 joystickInput;
 
     private void Start()
@@ -19,7 +19,6 @@ public class DeliveryAgent : MonoBehaviour
         if (agent == null) agent = GetComponent<NavMeshAgent>();
     }
 
-    // Call this from your joystick script
     public void SetJoystickInput(Vector2 input)
     {
         joystickInput = new Vector3(input.x, 0, input.y);
@@ -27,13 +26,15 @@ public class DeliveryAgent : MonoBehaviour
 
     private void Update()
     {
-        if (isReturningToPlayer)
+        if (isDeliveringItem)
         {
-            agent.SetDestination(playerTransform.position);
+            // Move to drop point
+            agent.SetDestination(dropPoint.position);
             
-            if (Vector3.Distance(transform.position, playerTransform.position) < deliveryRange)
+            // Check if close enough to drop
+            if (Vector3.Distance(transform.position, dropPoint.position) < dropRange)
             {
-                DeliverItem();
+                DropItem();
             }
         }
         else
@@ -65,14 +66,18 @@ public class DeliveryAgent : MonoBehaviour
         objectToPickup.transform.localRotation = Quaternion.identity;
 
         isHoldingItem = true;
-        isReturningToPlayer = true;
+        isDeliveringItem = true;
     }
 
-    private void DeliverItem()
+    private void DropItem()
     {
+        // Position the item at the drop point
         objectToPickup.transform.SetParent(null);
+        objectToPickup.transform.position = dropPoint.position;
+        objectToPickup.transform.rotation = dropPoint.rotation;
+
         isHoldingItem = false;
-        isReturningToPlayer = false;
-        Debug.Log("Item delivered to player!");
+        isDeliveringItem = false;
+        Debug.Log("Item delivered to drop point!");
     }
 }
