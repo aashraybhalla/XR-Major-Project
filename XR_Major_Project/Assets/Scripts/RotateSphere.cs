@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RotateSphere : MonoBehaviour
+public class Rotate : MonoBehaviour
 {
     // Rotation speed for the sphere (adjustable in the Inspector)
     public Vector3 rotationSpeed = new Vector3(0f, 50f, 0f);
