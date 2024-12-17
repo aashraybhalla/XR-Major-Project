@@ -6,6 +6,8 @@ public class JoystickScript : MonoBehaviour
 {
     public XRJoystick joystick;
     public float moveSpeed = 5f;
+    
+    public DeliveryAgent deliveryAgent;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,5 +20,11 @@ public class JoystickScript : MonoBehaviour
         Vector3 movement = new Vector3(joystick.value.x, 0f, joystick.value.y)* moveSpeed * Time.deltaTime;
 
         transform.Translate(movement);
+        UpdateJoystick(joystick.value);
+    }
+    
+    void UpdateJoystick(Vector2 input)
+    {
+        deliveryAgent.SetJoystickInput(input);
     }
 }
