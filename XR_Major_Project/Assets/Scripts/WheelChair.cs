@@ -7,44 +7,54 @@ public class WheelchairController : MonoBehaviour
 	[SerializeField] private XRGrabInteractable rightHandle;
 	[SerializeField] private Transform xrOrigin;
     
-	private bool isGrabbed;
-	private Vector3 originalPosition;
-	private Quaternion originalRotation;
+	private bool isLeftHandleGrabbed;
+	private bool isRightHandleGrabbed;
 
 	private void Start()
 	{
-		leftHandle.selectEntered.AddListener(OnHandleGrabbed);
-		leftHandle.selectExited.AddListener(OnHandleReleased);
-		rightHandle.selectEntered.AddListener(OnHandleGrabbed);
-		rightHandle.selectExited.AddListener(OnHandleReleased);
+		leftHandle.selectEntered.AddListener(OnLeftHandleGrabbed);
+		leftHandle.selectExited.AddListener(OnLeftHandleReleased);
+		rightHandle.selectEntered.AddListener(OnRightHandleGrabbed);
+		rightHandle.selectExited.AddListener(OnRightHandleReleased);
 	}
 
-	private void OnHandleGrabbed(SelectEnterEventArgs args)
+	private void OnLeftHandleGrabbed(SelectEnterEventArgs args)
 	{
-		if (!isGrabbed)
+		isLeftHandleGrabbed = true;
+		CheckBothHandlesGrabbed();
+	}
+
+	private void OnLeftHandleReleased(SelectExitEventArgs args)
+	{
+		isLeftHandleGrabbed = false;
+		DetachFromXROrigin();
+	}
+
+	private void OnRightHandleGrabbed(SelectEnterEventArgs args)
+	{
+		isRightHandleGrabbed = true;
+		CheckBothHandlesGrabbed();
+	}
+
+	private void OnRightHandleReleased(SelectExitEventArgs args)
+	{
+		isRightHandleGrabbed = false;
+		DetachFromXROrigin();
+	}
+
+	private void CheckBothHandlesGrabbed()
+	{
+		if (isLeftHandleGrabbed && isRightHandleGrabbed)
 		{
-			isGrabbed = true;
-			// Store original position and rotation
-			originalPosition = transform.position;
-			originalRotation = transform.rotation;
-            
-			// Parent wheelchair to XR Origin
 			transform.SetParent(xrOrigin);
 		}
 	}
 
-	private void OnHandleReleased(SelectExitEventArgs args)
+	private void DetachFromXROrigin()
 	{
-		// Only unparent if both handles are released
-		if (!leftHandle.isSelected && !rightHandle.isSelected)
-		{
-			isGrabbed = false;
-			// Unparent from XR Origin
-			transform.SetParent(null);
-            
-			// Maintain the world position/rotation it had while parented
-			transform.position = transform.position;
-			transform.rotation = transform.rotation;
-		}
+		transform.SetParent(null);
+		// Maintain the world position/rotation it had while parented
+		transform.position = transform.position;
+		transform.rotation = transform.rotation;
 	}
 }
