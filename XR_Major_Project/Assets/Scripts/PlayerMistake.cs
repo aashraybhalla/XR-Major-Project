@@ -46,7 +46,7 @@ public class PublicMistake : MonoBehaviour
         }
 
         // If a valid component is found and it's disabled
-        if (!targetComponent.enabled)
+        if (!targetComponent.enabled || targetComponent == null)
         {
             audioSource.Play();
 

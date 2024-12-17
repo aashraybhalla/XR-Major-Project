@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class Scalpel : MonoBehaviour
 {
@@ -12,6 +13,11 @@ public class Scalpel : MonoBehaviour
     public Drill drill;
     public GameObject patientSkinBody;
 
+    [Header("Video")]
+    public VideoPlayer videoPlayer;
+    public VideoClip clip;
+    private bool hasVideoPlayed = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,9 +28,19 @@ public class Scalpel : MonoBehaviour
             outlines.Add(child.gameObject);
         }
     }
+    private void OnEnable()
+    {
+        if (!hasVideoPlayed)
+        {
+            videoPlayer.clip = clip;
+            videoPlayer.Play();
+            hasVideoPlayed = true;
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
+        
         if (other.gameObject == outlines[currentCount])
         {
             Renderer objRender = other.GetComponent<Renderer>();

@@ -13,6 +13,9 @@ public class Scissors : MonoBehaviour
     public GameObject parentObject;
     public Scalpel scalpel;
     public GameObject patientBody;
+
+    [Header("Audio")]
+    public AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,17 +28,7 @@ public class Scissors : MonoBehaviour
     }
     private void OnEnable()
     {
-        //currentCount = 0;
-        //foreach (Transform child in parentObject.transform)
-        //{
-        //    outlines.Add(child.gameObject);
-        //}
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        audioSource.Play();
     }
 
     private void OnTriggerEnter(Collider other)
