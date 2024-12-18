@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/OldMainSceneOld.unity
-    guid: 691a1a8ca17d23242ad9e92436bd665d
-  - enabled: 1
     path: Assets/Scenes/Main Menu (Cross Platform).unity
     guid: 49691925d47ea6f478c85d97d02c288e
+  - enabled: 1
+    path: Assets/Scenes/CutSceneIntro.unity
+    guid: c1394bf38594dbf43b774f2eebd45b6e
   - enabled: 1
     path: Assets/Scenes/Scene_Main.unity
     guid: fd3f52f0cbaaee14ab3ac7a4bd346c2d
