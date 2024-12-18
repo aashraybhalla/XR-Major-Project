@@ -10,6 +10,7 @@ public class PublicMistake : MonoBehaviour
     public HeartClosureDevicePlacement devicePlacement;
     public Scalpel scalpel;
     public Anaesthesia anaesthesia;
+    public Stitching stitching;
 
     // Audio source for playing the sound effect
     public AudioSource audioSource;
@@ -43,6 +44,10 @@ public class PublicMistake : MonoBehaviour
         else if (anaesthesia != null)
         {
             targetComponent = anaesthesia;
+        }
+        else if(stitching != null)
+        {
+            targetComponent = stitching;
         }
 
         // If a valid component is found and it's disabled

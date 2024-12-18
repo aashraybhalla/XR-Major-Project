@@ -11,14 +11,14 @@ public class HeartClosureDevicePlacement : MonoBehaviour
     private Transform self;
     private XRGrabInteractable interactable;
     public GameObject skinBody;
+    public Stitching stitching;
 
     [Header("Video")]
     public VideoPlayer videoPlayer;
     public VideoClip clip;
     private bool hasVideoPlayed = false;
 
-    [Header("Audio")]
-    public AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,7 +44,6 @@ public class HeartClosureDevicePlacement : MonoBehaviour
             interactable.enabled = false;
             self.transform.position = other.transform.position;
             self.transform.rotation = other.transform.rotation;
-            audioSource.Play();
             Invoke("DelayActions", 3f);
             this.enabled = false;
         }
@@ -56,5 +55,6 @@ public class HeartClosureDevicePlacement : MonoBehaviour
         heart.SetActive(false);
         skinBody.SetActive(true);
         //enable next script
+        stitching.enabled = true;
     }
 }
